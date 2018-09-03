@@ -50,6 +50,7 @@ public class FactoryProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> annotations = new LinkedHashSet<>();
+        info("CanonicalName is %s", Factory.class.getCanonicalName());
         annotations.add(Factory.class.getCanonicalName());
         return annotations;
     }
@@ -79,7 +80,7 @@ public class FactoryProcessor extends AbstractProcessor {
                     classElement.getQualifiedName().toString(), Factory.class.getSimpleName());
         }
 
-        // Check inheritance: Class must be childclass as specified in @Factory.type();
+        // Check inheritance: Class must be child class as specified in @Factory.type();
         TypeElement superClassElement = elementUtils.getTypeElement(item.getQualifiedFactoryGroupName());
         if (superClassElement.getKind() == ElementKind.INTERFACE) {
             // Check interface implemented
@@ -93,6 +94,12 @@ public class FactoryProcessor extends AbstractProcessor {
             // Check subclassing
             TypeElement currentClass = classElement;
             while (true) {
+                /**
+                 * getSuperclass()
+                 * Returns the direct superclass of this type element.
+                 * If this type element represents an interface or the class java.lang.Object,
+                 * then a NoType with kind NONE is returned.
+                 */
                 TypeMirror superClassType = currentClass.getSuperclass();
 
                 if (superClassType.getKind() == TypeKind.NONE) {
@@ -135,7 +142,6 @@ public class FactoryProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
         try {
-
             // Scan classes
             for (Element annotatedElement : roundEnv.getElementsAnnotatedWith(Factory.class)) {
 
@@ -180,5 +186,13 @@ public class FactoryProcessor extends AbstractProcessor {
 
     private void error(Element e, String msg, Object... args) {
         messager.printMessage(Diagnostic.Kind.ERROR, String.format(msg, args), e);
+    }
+
+    private void error(String msg, Object... args) {
+        messager.printMessage(Diagnostic.Kind.ERROR, String.format(msg, args));
+    }
+
+    private void info(String msg, Object... args) {
+        messager.printMessage(Diagnostic.Kind.NOTE, String.format(msg, args));
     }
 }

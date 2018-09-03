@@ -8,47 +8,47 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypeException;
 
 public class FactoryAnnotatedClass {
-    private TypeElement annotatedClassElement;
-    private String qualifiedSuperClassName;
-    private String simpleTypeName;
-    private String id;
+    private TypeElement mAnnotatedClassElement;
+    private String mQualifiedSuperClassName;
+    private String mSimpleTypeName;
+    private String mId;
 
     public FactoryAnnotatedClass(TypeElement classElement) {
-        this.annotatedClassElement = classElement;
+        this.mAnnotatedClassElement = classElement;
         Factory annotation = classElement.getAnnotation(Factory.class);
-        id = annotation.id();
-        if (id.length() == 0) {
+        mId = annotation.id();
+        if (mId.length() == 0) {
             throw new IllegalArgumentException(
                     String.format("id() in @%s for class %s is null or empty! that's not allowed",
                             Factory.class.getSimpleName(), classElement.getQualifiedName().toString()));
         }
         // Get the full QualifiedTypeName
         try {
-        Class<?> clazz = annotation.type();
-        qualifiedSuperClassName=clazz.getCanonicalName();
-        simpleTypeName=clazz.getSimpleName();
-        }catch (MirroredTypeException mte){
+            Class<?> clazz = annotation.type();
+            mQualifiedSuperClassName = clazz.getCanonicalName();
+            mSimpleTypeName = clazz.getSimpleName();
+        } catch (MirroredTypeException mte) {
             DeclaredType classTypeMirror = (DeclaredType) mte.getTypeMirror();
             TypeElement classTypeElement = (TypeElement) classTypeMirror.asElement();
-            qualifiedSuperClassName = classTypeElement.getQualifiedName().toString();
-            simpleTypeName = classTypeElement.getSimpleName().toString();
+            mQualifiedSuperClassName = classTypeElement.getQualifiedName().toString();
+            mSimpleTypeName = classTypeElement.getSimpleName().toString();
         }
     }
 
     public String getId() {
-        return id;
+        return mId;
     }
 
     public String getQualifiedFactoryGroupName() {
-        return qualifiedSuperClassName;
+        return mQualifiedSuperClassName;
     }
 
 
     public String getSimpleFactoryGroupName() {
-        return simpleTypeName;
+        return mSimpleTypeName;
     }
 
     public TypeElement getTypeElement() {
-        return annotatedClassElement;
+        return mAnnotatedClassElement;
     }
 }
