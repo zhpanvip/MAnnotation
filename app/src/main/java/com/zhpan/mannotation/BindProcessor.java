@@ -26,15 +26,8 @@ public class BindProcessor {
     private static void injectLayout(Activity activity) {
         Class<?> activityClass = activity.getClass();
         if (activityClass.isAnnotationPresent(InjectLayout.class)) {
-            InjectLayout mId = activityClass.getAnnotation(InjectLayout.class);
-            int id = mId.value();
-            try {
-                Method method = activityClass.getMethod("setContentView", int.class);
-                method.setAccessible(true);
-                method.invoke(activity, id);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            InjectLayout injectLayout = activityClass.getAnnotation(InjectLayout.class);
+            activity.setContentView(injectLayout.value());
         }
     }
 
@@ -43,15 +36,12 @@ public class BindProcessor {
         Field[] declaredFields = activityClass.getDeclaredFields();
         for (Field field : declaredFields) {
             if (field.isAnnotationPresent(BindView.class)) {
-                BindView mId = field.getAnnotation(BindView.class);
-                int id = mId.value();
+                BindView bindView = field.getAnnotation(BindView.class);
                 try {
-                    Method method = activityClass.getMethod("findViewById", int.class);
-                    method.setAccessible(true);
-                    Object view = method.invoke(activity, id);
+                    View view = activity.findViewById(bindView.value());
                     field.setAccessible(true);
                     field.set(activity, view);
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                } catch (IllegalAccessException e ) {
                     e.printStackTrace();
                 }
             }
@@ -64,8 +54,8 @@ public class BindProcessor {
         for (int i = 0; i < methods.length; i++) {
             final Method method = methods[i];
             if (method.isAnnotationPresent(OnClick.class)) {
-                OnClick mOnclick = method.getAnnotation(OnClick.class);
-                int[] ids = mOnclick.value();
+                OnClick onClick = method.getAnnotation(OnClick.class);
+                int[] ids = onClick.value();
                 for (int j = 0; j < ids.length; j++) {
                     final View view = activity.findViewById(ids[j]);
                     if (view == null) continue;

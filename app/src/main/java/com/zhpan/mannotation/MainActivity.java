@@ -14,7 +14,7 @@ import com.zhpan.api.MButterKnife;
 import com.zhpan.mannotation.factory.Shape;
 import com.zhpan.mannotation.factory.ShapeFactory;
 
-//@InjectLayout(R.layout.activity_main)
+@InjectLayout(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tv_test)
     Button mButton;
@@ -24,13 +24,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MButterKnife.bind(this);
-//        BindProcessor.bind(this);
+//        MButterKnife.bind(this);
+        BindProcessor.bind(this);
         mButton.setText("通过注解设置的Text");
         mShapeFactory = new ShapeFactory();
     }
 
-    @OnClick({R.id.btn_factory,R.id.tv_test})
+    @OnClick({R.id.btn_factory, R.id.tv_test})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_test:
