@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        MButterKnife.bind(this);
-        BindProcessor.bind(this);
+        MButterKnife.bind(this);
+//        BindProcessor.bind(this);
         mButton.setText("通过注解设置的Text");
         mShapeFactory = new ShapeFactory();
     }
